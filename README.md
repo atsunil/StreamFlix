@@ -2,6 +2,9 @@
 
 StreamFlix is a responsive streaming catalogue web application that allows users to browse movies, watch trailers, and manage their watchlists. The application features a secure admin panel for managing movie content, including adding, editing, and deleting movies.
 
+#StreamFlix At Live
+https://streamfl.netlify.app/
+
 ## Features
 
 ### User Features
