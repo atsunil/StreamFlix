@@ -1,0 +1,28 @@
+.carousel-section {
+  margin-bottom: 2.5rem;
+}
+
+.carousel-title {
+  color: #fff;
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 0 0 1rem 1vw;
+  letter-spacing: 0.5px;
+}
+
+.carousel-row {
+  display: flex;
+  overflow-x: auto;
+  gap: 1.2rem;
+  padding-left: 1vw;
+  scroll-behavior: smooth;
+}
+
+.carousel-row::-webkit-scrollbar {
+  height: 8px;
+  background: #222;
+}
+.carousel-row::-webkit-scrollbar-thumb {
+  background: #e50914;
+  border-radius: 5px;
+}
