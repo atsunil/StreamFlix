@@ -1,0 +1,31 @@
+services:
+  # Backend Service
+  - type: web
+    name: streamflix-backend
+    env: node
+    plan: free
+    repo: https://github.com/atsunil/StreamFlix
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false  # You will need to add this manually in the dashboard
+
+  # Frontend Service (Static Site)
+  - type: web
+    name: streamflix-frontend
+    env: static
+    plan: free
+    repo: https://github.com/atsunil/StreamFlix
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: streamflix-backend
+          property: url
