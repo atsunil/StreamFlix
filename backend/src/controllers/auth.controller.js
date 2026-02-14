@@ -4,6 +4,9 @@ const bcrypt = require('bcrypt');
 const { validationResult } = require('express-validator');
 const mockStorage = require('../utils/mockStorage');
 
+const JWT_SECRET = process.env.JWT_SECRET || 'default_secret_key_for_demo';
+const TOKEN_EXPIRY = '7d'; // 7 days instead of 1 hour
+
 // Register a new user
 exports.register = async (req, res) => {
     const { name, email, password } = req.body;
@@ -13,8 +16,12 @@ exports.register = async (req, res) => {
         const existingUser = mockStorage.userStorage.getOne(email);
         if (existingUser) return res.status(400).json({ message: 'User already exists' });
 
-        await mockStorage.userStorage.create({ name, email, password });
-        return res.status(201).json({ message: 'User registered successfully (Mock)' });
+        const newUser = await mockStorage.userStorage.create({ name, email, password });
+        const token = jwt.sign({ id: newUser._id, role: newUser.role }, JWT_SECRET, { expiresIn: TOKEN_EXPIRY });
+        return res.status(201).json({
+            token,
+            user: { id: newUser._id, name: newUser.name, email: newUser.email, role: newUser.role }
+        });
     }
 
     try {
@@ -31,8 +38,19 @@ exports.register = async (req, res) => {
         });
         await newUser.save();
 
-        res.status(201).json({ message: 'User registered successfully' });
+        const token = jwt.sign({ id: newUser._id, role: newUser.role }, JWT_SECRET, { expiresIn: TOKEN_EXPIRY });
+        res.status(201).json({
+            token,
+            user: {
+                id: newUser._id,
+                name: newUser.name,
+                email: newUser.email,
+                role: newUser.role,
+                watchlist: newUser.watchlist
+            }
+        });
     } catch (error) {
+        console.error('Register error:', error);
         res.status(500).json({ message: 'Server error' });
     }
 };
@@ -49,7 +67,7 @@ exports.login = async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.passwordHash);
         if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
 
-        const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET || 'secret', { expiresIn: '1h' });
+        const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: TOKEN_EXPIRY });
         return res.json({
             token,
             user: { id: user._id, name: user.name, email: user.email, role: user.role }
@@ -71,7 +89,7 @@ exports.login = async (req, res) => {
             return res.status(400).json({ message: 'Invalid credentials' });
         }
 
-        const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET || 'default_secret_key_for_demo', { expiresIn: '1h' });
+        const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: TOKEN_EXPIRY });
         res.json({
             token,
             user: {
@@ -83,6 +101,7 @@ exports.login = async (req, res) => {
             }
         });
     } catch (error) {
+        console.error('Login error:', error);
         res.status(500).json({ message: 'Server error' });
     }
 };
@@ -91,6 +110,18 @@ exports.login = async (req, res) => {
 // Get current user
 exports.getCurrentUser = async (req, res) => {
     try {
+        if (!process.env.DATABASE_URL && !process.env.MONGODB_URI) {
+            const user = mockStorage.userStorage.getById(req.user.id);
+            if (!user) return res.status(404).json({ message: 'User not found' });
+            return res.json({
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                watchlist: user.watchlist || []
+            });
+        }
+
         const user = await User.findById(req.user.id);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
@@ -104,6 +135,7 @@ exports.getCurrentUser = async (req, res) => {
             profiles: user.profiles
         });
     } catch (error) {
+        console.error('getCurrentUser error:', error);
         res.status(500).json({ message: 'Server error' });
     }
 };
