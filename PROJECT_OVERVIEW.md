@@ -3,7 +3,7 @@
 ## 1. Project Overview
 StreamFlix is a full-stack Netflix-clone streaming catalogue web application. It allows users to browse movies, watch trailers (with hover-to-play preview on cards), manage personal watchlists, and receive genre-based recommendations. It includes a secure admin panel for full CRUD management of movie content.
 
-**Live Demo:** https://streamfl.netlify.app/
+**Live Demo:** https://stream-flix-self.vercel.app/
 
 ---
 
