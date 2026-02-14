@@ -49,6 +49,22 @@ const Login = () => {
     }
   };
 
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 800));
+
+    try {
+      // Use seeded demo credentials
+      await login('admin@example.com', 'password123');
+      navigate('/');
+    } catch (err) {
+      setError('Google Login failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="auth-page">
       <div className="poster-mosaic">
@@ -157,9 +173,9 @@ const Login = () => {
           <div className="auth-divider"><span>OR CONTINUE WITH</span></div>
 
           <div className="social-logins">
-            <button className="social-btn google">
+            <button className="social-btn google" onClick={handleGoogleLogin} type="button">
               <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" />
-              Google
+              Continue with Google (Demo)
             </button>
           </div>
 
