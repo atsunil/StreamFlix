@@ -144,9 +144,10 @@ const MovieForm = ({ initialData, onSubmit, userToken }) => {
         runtimeMinutes: parseInt(formData.runtimeMinutes)
       };
 
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
       const url = initialData
-        ? `http://localhost:5000/api/admin/movies/${initialData._id}`
-        : 'http://localhost:5000/api/admin/movies';
+        ? `${API_URL}/admin/movies/${initialData._id}`
+        : `${API_URL}/admin/movies`;
 
       const method = initialData ? 'PUT' : 'POST';
 

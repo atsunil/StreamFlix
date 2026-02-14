@@ -32,7 +32,8 @@ const Watchlist = () => {
       }
 
       try {
-        const res = await fetch('http://localhost:5000/api/movies');
+        const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+        const res = await fetch(`${API_URL}/movies`);
         const data = await res.json();
         // Demo: treat first 3 as watchlist items so user sees something
         setWatchlist(data.slice(0, 3).map((m, i) => ({

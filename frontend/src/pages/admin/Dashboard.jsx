@@ -5,6 +5,7 @@ import MovieForm from '../../components/MovieForm';
 import './Dashboard.css';
 
 const Dashboard = () => {
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
   const { user, loading } = useContext(AuthContext);
   const navigate = useNavigate();
   const [movies, setMovies] = useState([]);
@@ -19,7 +20,7 @@ const Dashboard = () => {
 
   const fetchMovies = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/movies');
+      const response = await fetch(`${API_URL}/movies`);
       const data = await response.json();
       setMovies(data);
     } catch (err) {
@@ -47,7 +48,7 @@ const Dashboard = () => {
     if (!window.confirm('Delete this masterpiece?')) return;
 
     try {
-      await fetch(`http://localhost:5000/api/admin/movies/${movieId}`, {
+      await fetch(`${API_URL}/admin/movies/${movieId}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${user.token}` },
       });
