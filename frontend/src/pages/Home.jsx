@@ -185,15 +185,15 @@ const Home = ({ search = "" }) => {
               <button onClick={() => handlePlay(currentSlide)} className="hero-btn primary">▶ Watch Now</button>
               <button onClick={() => handleShowDetails(currentSlide)} className="hero-btn secondary">More Info</button>
             </div>
-            <div className="hero-slideshow-nav">
-              {featuredMovies.map((_, idx) => (
-                <button
-                  key={idx}
-                  className={"hero-slide-dot" + (slideIndex === idx ? " active" : "")}
-                  onClick={() => setSlideIndex(idx)}
-                />
-              ))}
-            </div>
+          </div>
+          <div className="hero-slideshow-nav">
+            {featuredMovies.map((_, idx) => (
+              <button
+                key={idx}
+                className={"hero-slide-dot" + (slideIndex === idx ? " active" : "")}
+                onClick={() => setSlideIndex(idx)}
+              />
+            ))}
           </div>
         </div>
       ) : (
