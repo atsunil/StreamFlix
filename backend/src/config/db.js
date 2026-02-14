@@ -9,8 +9,5 @@ if (!uri) {
 }
 
 module.exports = async function connectDB() {
-  return mongoose.connect(uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  return mongoose.connect(uri);
 };

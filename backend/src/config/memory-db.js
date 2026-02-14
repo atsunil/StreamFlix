@@ -8,10 +8,7 @@ const connect = async () => {
     mongod = await MongoMemoryServer.create();
     const uri = mongod.getUri();
 
-    await mongoose.connect(uri, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    });
+    await mongoose.connect(uri);
 
     console.log('✅ In-memory database started and connected');
     return uri;
