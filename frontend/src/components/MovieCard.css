@@ -1,24 +1,28 @@
 /* ══ Movie Card ══ */
 .movie-card {
     position: relative;
-    min-width: 200px;
-    height: 300px;
-    border-radius: 12px;
+    min-width: 220px;
+    height: 330px;
+    border-radius: 16px;
     overflow: hidden;
     cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: var(--bg-mid);
 }
 
 .movie-card:hover {
-    transform: scale(1.06);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
-    z-index: 10;
+    transform: scale(1.08) translateY(-10px);
+    box-shadow: 0 20px 40px rgba(139, 92, 246, 0.15);
+    /* Purple glow */
+    border-color: rgba(139, 92, 246, 0.3);
+    z-index: 20;
 }
 
 .movie-card:focus-visible {
     outline: 2px solid var(--accent-cyan);
-    outline-offset: 3px;
+    outline-offset: 4px;
 }
 
 .movie-poster {
@@ -26,6 +30,11 @@
     height: 100%;
     object-fit: cover;
     display: block;
+    transition: transform 0.5s ease;
+}
+
+.movie-card:hover .movie-poster {
+    filter: brightness(0.6);
 }
 
 /* ── Progress Bar ── */
@@ -34,24 +43,26 @@
     bottom: 0;
     left: 0;
     right: 0;
-    height: 3px;
-    margin-top: 0;
+    height: 4px;
     z-index: 5;
+    background: rgba(0, 0, 0, 0.5);
 }
 
 /* ── Hover Overlay ── */
 .movie-card-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 20%, rgba(0, 0, 0, 0.6) 50%, transparent 100%);
+    background: linear-gradient(to top,
+            rgba(2, 6, 23, 0.95) 0%,
+            rgba(139, 92, 246, 0.1) 100%);
     opacity: 0;
     transition: opacity 0.3s ease;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    padding: 1rem;
+    padding: 1.2rem;
     z-index: 5;
-    /* Increased to be above video (z-index: 3) */
+    backdrop-filter: blur(2px);
 }
 
 .movie-card-overlay.active {
@@ -61,10 +72,10 @@
 /* ── Overlay Buttons ── */
 .overlay-btns {
     display: flex;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-    transform: translateY(8px);
-    transition: transform 0.3s ease;
+    gap: 0.8rem;
+    margin-bottom: 0.8rem;
+    transform: translateY(20px);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     align-items: center;
 }
 
@@ -73,96 +84,108 @@
 }
 
 .circle-btn {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    border: 2px solid rgba(255, 255, 255, 0.5);
-    background: rgba(42, 42, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
     color: #fff;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     transition: all 0.2s ease;
     padding: 0;
+    backdrop-filter: blur(4px);
 }
 
 .circle-btn:hover {
     border-color: #fff;
-    background: rgba(255, 255, 255, 0.1);
-    transform: scale(1.1);
+    background: #fff;
+    color: var(--primary-brand);
+    transform: scale(1.15);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
 }
 
 .circle-btn.play {
-    width: 40px;
-    height: 40px;
-    background: #fff;
-    color: #000;
+    width: 44px;
+    height: 44px;
+    background: var(--primary-brand);
+    color: #fff;
     border: none;
-    font-size: 1rem;
-    margin-right: 4px;
+    font-size: 1.2rem;
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
 }
 
 .circle-btn.play:hover {
-    background: #e6e6e6;
+    background: var(--primary-hover);
     transform: scale(1.1);
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.6);
 }
 
 /* ── Overlay Text ── */
 .overlay-title {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     font-weight: 800;
-    margin-bottom: 0.2rem;
+    margin-bottom: 0.4rem;
     color: #fff;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
     line-height: 1.2;
+    transform: translateY(10px);
+    transition: transform 0.4s 0.1s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .overlay-meta {
-    font-size: 0.75rem;
-    color: #ccc;
+    font-size: 0.8rem;
+    color: var(--accent-cyan);
     font-weight: 600;
     display: flex;
     align-items: center;
+    gap: 8px;
+    transform: translateY(10px);
+    transition: transform 0.4s 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.movie-card-overlay.active .overlay-title,
+.movie-card-overlay.active .overlay-meta {
+    transform: translateY(0);
 }
 
 .meta-item {
-    color: #ccc;
+    color: #cbd5e1;
 }
-
 
 /* ── Responsive ── */
 @media (max-width: 900px) {
     .movie-card {
-        min-width: 150px;
-        height: 225px;
+        min-width: 160px;
+        height: 240px;
     }
 
     .overlay-title {
-        font-size: 0.85rem;
+        font-size: 0.95rem;
+    }
+
+    .circle-btn {
+        width: 32px;
+        height: 32px;
+    }
+
+    .circle-btn.play {
+        width: 38px;
+        height: 38px;
     }
 }
 
 @media (max-width: 600px) {
     .movie-card {
-        min-width: 120px;
-        height: 180px;
-        border-radius: 8px;
+        min-width: 130px;
+        height: 195px;
+        border-radius: 12px;
     }
 
     .movie-card-overlay {
         padding: 0.8rem;
-    }
-
-    .overlay-btns {
-        gap: 0.4rem;
-    }
-
-    .circle-btn {
-        width: 28px;
-        height: 28px;
-        font-size: 0.7rem;
     }
 }
 
@@ -174,7 +197,6 @@
     width: 100%;
     height: 100%;
     z-index: 3;
-    /* Above poster (0) and potential overlays if needed, but below interactive overlay (10?) */
     background: #000;
     overflow: hidden;
     animation: fadeIn 0.4s ease;
@@ -185,10 +207,8 @@
     height: 100%;
     object-fit: cover;
     pointer-events: none;
-    /* Let clicks pass through to the card */
     border: none;
     transform: scale(1.35);
-    /* Zoom in slightly to avoid black bars on standard 16:9 trailers in portrait cards */
 }
 
 @keyframes fadeIn {
@@ -202,13 +222,13 @@
 }
 
 .circle-btn.in-watchlist {
-    border-color: #4caf50;
-    color: #4caf50;
-    background: rgba(76, 175, 80, 0.1);
+    border-color: var(--accent-cyan);
+    color: var(--accent-cyan);
+    background: rgba(34, 211, 238, 0.1);
+    box-shadow: 0 0 10px rgba(34, 211, 238, 0.2);
 }
 
 .circle-btn.in-watchlist:hover {
-    background: rgba(76, 175, 80, 0.2);
-    border-color: #4caf50;
-    color: #4caf50;
+    background: var(--accent-cyan);
+    color: #000;
 }

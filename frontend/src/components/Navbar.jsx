@@ -82,7 +82,7 @@ const Navbar = ({ onSearch }) => {
   return (
     <nav className="navbar">
       <div className="navbar-logo">
-        <Link to="/">Stream<span style={{ color: '#fff' }}>Flix</span></Link>
+        <Link to="/">StreamFlix</Link>
       </div>
       <ul className="navbar-links">
         <li><Link to="/">Home</Link></li>
@@ -140,7 +140,7 @@ const Navbar = ({ onSearch }) => {
                 aria-haspopup="true"
                 aria-expanded={showMenu}
               >
-                <img src={`https://ui-avatars.com/api/?name=${user.name}&background=e50914&color=fff`} alt="" className="nav-avatar" />
+                <img src={`https://ui-avatars.com/api/?name=${user.name}&background=8b5cf6&color=fff`} alt="" className="nav-avatar" />
                 <span className="user-name">{user.name}</span>
               </button>
               {showMenu && (
