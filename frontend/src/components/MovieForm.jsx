@@ -20,8 +20,17 @@ const MovieForm = ({ initialData, onSubmit, userToken }) => {
   const [loading, setLoading] = useState(false);
 
   // Suggestions Data
-  const SUGGESTED_GENRES = ["Action", "Thriller", "Sci-Fi", "Romance", "Horror", "Drama"];
-  const SUGGESTED_TAGS = ["Time Travel", "Psychological", "Heist", "Space", "AI"];
+  const SUGGESTED_GENRES = [
+    "Action", "Adventure", "Animation", "Comedy", "Crime", "Documentary",
+    "Drama", "Fantasy", "Horror", "Mystery", "Romance", "Sci-Fi",
+    "Thriller", "War", "Western", "Musical", "Family", "Biography"
+  ];
+  const SUGGESTED_TAGS = [
+    "Time Travel", "Psychological", "Heist", "Space", "AI",
+    "Superhero", "Dystopia", "Revenge", "Survival", "Coming of Age",
+    "Based on True Story", "Mind Bending", "Dark Comedy", "Noir",
+    "Cyberpunk", "Post-Apocalyptic"
+  ];
 
   useEffect(() => {
     if (initialData) {
@@ -92,20 +101,44 @@ const MovieForm = ({ initialData, onSubmit, userToken }) => {
     const text = (formData.description + ' ' + formData.title).toLowerCase();
     const suggested = { genres: [], tags: [] };
 
-    // Simple keyword mapping demo
     const genreMap = {
-      "Action": ["fight", "battle", "hero", "spy", "chase", "shoot", "war"],
-      "Sci-Fi": ["space", "alien", "robot", "future", "star", "tech", "sci-fi", "planet"],
-      "Thriller": ["dark", "murder", "crime", "mystery", "hunt", "killer", "secret"],
-      "Romance": ["love", "heart", "date", "romantic", "kiss", "feelings"],
-      "Horror": ["scary", "ghost", "blood", "death", "haunted", "fear"]
+      "Action": ["fight", "battle", "hero", "spy", "chase", "shoot", "war", "explosion", "combat", "weapon"],
+      "Adventure": ["journey", "quest", "explore", "treasure", "expedition", "voyage", "discover"],
+      "Animation": ["animated", "cartoon", "pixar", "disney", "anime", "cgi"],
+      "Comedy": ["funny", "comedy", "humor", "laugh", "hilarious", "joke", "sitcom"],
+      "Crime": ["crime", "detective", "mafia", "mob", "gangster", "police", "heist", "robbery"],
+      "Documentary": ["documentary", "real", "footage", "chronicle", "history"],
+      "Drama": ["drama", "emotional", "family", "struggle", "relationship", "conflict"],
+      "Fantasy": ["magic", "wizard", "dragon", "kingdom", "mythical", "enchant", "sorcery"],
+      "Horror": ["scary", "ghost", "blood", "death", "haunted", "fear", "demon", "possessed", "zombie"],
+      "Mystery": ["mystery", "clue", "investigate", "puzzle", "whodunit", "enigma"],
+      "Romance": ["love", "heart", "date", "romantic", "kiss", "feelings", "passion", "affair"],
+      "Sci-Fi": ["space", "alien", "robot", "future", "star", "tech", "sci-fi", "planet", "galaxy", "cyber"],
+      "Thriller": ["dark", "murder", "suspense", "tension", "hunt", "killer", "secret", "twist"],
+      "War": ["war", "soldier", "military", "army", "battlefield", "troop", "conflict"],
+      "Western": ["cowboy", "outlaw", "frontier", "sheriff", "saloon", "ranch", "desert"],
+      "Musical": ["music", "song", "sing", "dance", "concert", "band", "opera"],
+      "Family": ["children", "kid", "family", "wholesome", "parent", "heartwarming"],
+      "Biography": ["biography", "biopic", "life story", "true story", "based on", "memoir"]
     };
 
     const tagMap = {
-      "Time Travel": ["time", "past", "future", "portal", "clock"],
-      "AI": ["robot", "intelligence", "computing", "silicon", "neural"],
-      "Psychological": ["mind", "brain", "trauma", "memory", "dream"],
-      "Space": ["universe", "galaxy", "asteroid", "rocket", "void"]
+      "Time Travel": ["time", "past", "future", "portal", "clock", "temporal"],
+      "AI": ["robot", "intelligence", "computing", "silicon", "neural", "machine learning", "sentient"],
+      "Psychological": ["mind", "brain", "trauma", "memory", "dream", "psyche", "hallucination"],
+      "Space": ["universe", "galaxy", "asteroid", "rocket", "void", "orbit", "mars", "moon"],
+      "Heist": ["heist", "robbery", "steal", "vault", "break-in", "con"],
+      "Superhero": ["superhero", "superpower", "cape", "villain", "marvel", "dc", "avenger"],
+      "Dystopia": ["dystopia", "oppression", "regime", "rebellion", "totalitarian", "apocalypse"],
+      "Revenge": ["revenge", "vengeance", "avenge", "payback", "retribution"],
+      "Survival": ["survive", "wilderness", "stranded", "isolated", "endurance"],
+      "Coming of Age": ["teenage", "growing up", "adolescent", "youth", "coming of age"],
+      "Based on True Story": ["true story", "based on", "real events", "inspired by", "actual"],
+      "Mind Bending": ["inception", "reality", "illusion", "perception", "matrix", "simulation"],
+      "Dark Comedy": ["dark humor", "satire", "ironic", "morbid", "cynical"],
+      "Noir": ["noir", "detective", "femme fatale", "shadowy", "gritty"],
+      "Cyberpunk": ["cyberpunk", "neon", "hacker", "virtual reality", "augmented", "implant"],
+      "Post-Apocalyptic": ["post-apocalyptic", "wasteland", "ruins", "fallout", "aftermath"]
     };
 
     Object.entries(genreMap).forEach(([genre, keywords]) => {
@@ -242,10 +275,15 @@ const MovieForm = ({ initialData, onSubmit, userToken }) => {
               <div className="floating-group">
                 <select id="language" name="language" value={formData.language} onChange={handleChange} className="wizard-input floating-input">
                   <option value="English">English</option>
+                  <option value="Hindi">Hindi</option>
+                  <option value="Tamil">Tamil</option>
+                  <option value="Telugu">Telugu</option>
                   <option value="Spanish">Spanish</option>
                   <option value="French">French</option>
-                  <option value="Tamil">Tamil</option>
-                  <option value="Hindi">Hindi</option>
+                  <option value="Korean">Korean</option>
+                  <option value="Japanese">Japanese</option>
+                  <option value="German">German</option>
+                  <option value="Chinese">Chinese</option>
                 </select>
                 <label htmlFor="language" className="floating-label">Language</label>
               </div>

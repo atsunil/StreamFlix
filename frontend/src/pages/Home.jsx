@@ -39,7 +39,11 @@ const Home = ({ search = "" }) => {
   const [language, setLanguage] = useState('All');
   const [yearRange, setYearRange] = useState(2026);
 
-  const allGenres = ['Action', 'Sci-Fi', 'Drama', 'Comedy', 'Horror', 'Romance'];
+  const allGenres = [
+    'Action', 'Adventure', 'Animation', 'Comedy', 'Crime', 'Documentary',
+    'Drama', 'Fantasy', 'Horror', 'Mystery', 'Romance', 'Sci-Fi',
+    'Thriller', 'War', 'Western', 'Musical', 'Family', 'Biography'
+  ];
 
   const getMovies = useCallback(async () => {
     try {

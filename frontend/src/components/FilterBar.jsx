@@ -44,7 +44,13 @@ const FilterBar = ({
                         <option value="English">English</option>
                         <option value="Hindi">Hindi</option>
                         <option value="Tamil">Tamil</option>
+                        <option value="Telugu">Telugu</option>
+                        <option value="Spanish">Spanish</option>
                         <option value="French">French</option>
+                        <option value="Korean">Korean</option>
+                        <option value="Japanese">Japanese</option>
+                        <option value="German">German</option>
+                        <option value="Chinese">Chinese</option>
                     </select>
                 </div>
 
@@ -69,8 +75,11 @@ const FilterBar = ({
                     <span className="input-icon">⇅</span>
                     <select value={sortBy} onChange={(e) => onSortChange(e.target.value)}>
                         <option value="newest">Newest</option>
+                        <option value="oldest">Oldest</option>
                         <option value="popular">Popular</option>
                         <option value="rating">Top Rated</option>
+                        <option value="az">A → Z</option>
+                        <option value="za">Z → A</option>
                     </select>
                 </div>
             </div>
