@@ -1,11 +1,10 @@
 /* ══ Filter Bar ══ */
 .filter-bar {
     margin: 2rem 4vw;
-    padding: 1rem 1.8rem;
+    padding: 1.5rem 1.8rem;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 2rem;
+    flex-direction: column;
+    gap: 1.2rem;
     border-radius: 20px;
     background: rgba(15, 23, 42, 0.6);
     backdrop-filter: blur(16px);
@@ -19,36 +18,25 @@
     box-shadow: 0 15px 40px -5px rgba(139, 92, 246, 0.1);
 }
 
-/* ── Left: Genres ── */
+/* ── Top Row: Genres (wrapping) ── */
 .filter-left {
-    flex: 1;
-    overflow: hidden;
-    margin-right: 1.5rem;
+    width: 100%;
 }
 
 .genre-scroll {
     display: flex;
-    gap: 0.8rem;
-    overflow-x: auto;
-    padding-bottom: 4px;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    mask-image: linear-gradient(to right, black 95%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to right, black 95%, transparent 100%);
-}
-
-.genre-scroll::-webkit-scrollbar {
-    display: none;
+    flex-wrap: wrap;
+    gap: 0.6rem;
 }
 
 .filter-chip {
     white-space: nowrap;
-    padding: 0.6rem 1.4rem;
+    padding: 0.5rem 1.2rem;
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: var(--text-muted);
     border-radius: 50px;
-    font-size: 0.9rem;
+    font-size: 0.82rem;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -69,12 +57,14 @@
     box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
 }
 
-/* ── Right: Inputs ── */
+/* ── Bottom Row: Dropdowns ── */
 .filter-right {
     display: flex;
     align-items: center;
     gap: 1.2rem;
-    flex-shrink: 0;
+    flex-wrap: wrap;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding-top: 1rem;
 }
 
 .filter-input-group {
@@ -167,14 +157,10 @@
 /* ── Responsive ── */
 @media (max-width: 900px) {
     .filter-bar {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 1.5rem;
-        padding: 1.5rem;
+        padding: 1.2rem;
     }
 
     .filter-right {
-        justify-content: space-between;
         width: 100%;
     }
 
@@ -191,9 +177,5 @@
 
     .filter-input-group {
         min-width: 100%;
-    }
-
-    .genre-scroll {
-        padding-bottom: 8px;
     }
 }
