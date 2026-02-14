@@ -1,0 +1,214 @@
+/* ══ Movie Card ══ */
+.movie-card {
+    position: relative;
+    min-width: 200px;
+    height: 300px;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.movie-card:hover {
+    transform: scale(1.06);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
+    z-index: 10;
+}
+
+.movie-card:focus-visible {
+    outline: 2px solid var(--accent-cyan);
+    outline-offset: 3px;
+}
+
+.movie-poster {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* ── Progress Bar ── */
+.card-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    margin-top: 0;
+    z-index: 5;
+}
+
+/* ── Hover Overlay ── */
+.movie-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 20%, rgba(0, 0, 0, 0.6) 50%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1rem;
+    z-index: 5;
+    /* Increased to be above video (z-index: 3) */
+}
+
+.movie-card-overlay.active {
+    opacity: 1;
+}
+
+/* ── Overlay Buttons ── */
+.overlay-btns {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    transform: translateY(8px);
+    transition: transform 0.3s ease;
+    align-items: center;
+}
+
+.movie-card-overlay.active .overlay-btns {
+    transform: translateY(0);
+}
+
+.circle-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    background: rgba(42, 42, 42, 0.6);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+.circle-btn:hover {
+    border-color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+}
+
+.circle-btn.play {
+    width: 40px;
+    height: 40px;
+    background: #fff;
+    color: #000;
+    border: none;
+    font-size: 1rem;
+    margin-right: 4px;
+}
+
+.circle-btn.play:hover {
+    background: #e6e6e6;
+    transform: scale(1.1);
+}
+
+/* ── Overlay Text ── */
+.overlay-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    margin-bottom: 0.2rem;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+    line-height: 1.2;
+}
+
+.overlay-meta {
+    font-size: 0.75rem;
+    color: #ccc;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+.meta-item {
+    color: #ccc;
+}
+
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+    .movie-card {
+        min-width: 150px;
+        height: 225px;
+    }
+
+    .overlay-title {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .movie-card {
+        min-width: 120px;
+        height: 180px;
+        border-radius: 8px;
+    }
+
+    .movie-card-overlay {
+        padding: 0.8rem;
+    }
+
+    .overlay-btns {
+        gap: 0.4rem;
+    }
+
+    .circle-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 0.7rem;
+    }
+}
+
+/* ── Video Preview ── */
+.movie-card-video-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    /* Above poster (0) and potential overlays if needed, but below interactive overlay (10?) */
+    background: #000;
+    overflow: hidden;
+    animation: fadeIn 0.4s ease;
+}
+
+.movie-card-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+    /* Let clicks pass through to the card */
+    border: none;
+    transform: scale(1.35);
+    /* Zoom in slightly to avoid black bars on standard 16:9 trailers in portrait cards */
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.circle-btn.in-watchlist {
+    border-color: #4caf50;
+    color: #4caf50;
+    background: rgba(76, 175, 80, 0.1);
+}
+
+.circle-btn.in-watchlist:hover {
+    background: rgba(76, 175, 80, 0.2);
+    border-color: #4caf50;
+    color: #4caf50;
+}

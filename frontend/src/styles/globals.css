@@ -1,0 +1,428 @@
+/* ══════════════════════════════════════════════════
+   StreamFlix – Global Design System
+   Theme: Deep Charcoal + Midnight Gradient OTT
+   ══════════════════════════════════════════════════ */
+
+/* ── CSS Variables ── */
+:root {
+    --primary-red: #E50914;
+    --primary-hover: #b20710;
+    --bg-dark: #0B0F14;
+    --bg-mid: #141821;
+    --bg-light: #1C1F2A;
+    --bg-gradient: linear-gradient(135deg, #0B0F14 0%, #141821 50%, #1C1F2A 100%);
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-blur: blur(20px);
+    --text-main: #E5E7EB;
+    --text-muted: #9CA3AF;
+    --shadow-premium: 0 10px 40px rgba(0, 0, 0, 0.6);
+    --accent-cyan: #6EE7F9;
+    --accent-violet: #8B5CF6;
+    --skeleton-bg: rgba(255, 255, 255, 0.05);
+    --skeleton-shimmer: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+}
+
+/* ── Reset ── */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+    width: 100%;
+    min-height: 100vh;
+}
+
+body {
+    background: var(--bg-gradient);
+    background-attachment: fixed;
+    color: var(--text-main);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+}
+
+button {
+    font-family: inherit;
+    border: none;
+    cursor: pointer;
+}
+
+/* ── Skeleton Loader ── */
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.skeleton {
+    position: relative;
+    overflow: hidden;
+    background: var(--skeleton-bg);
+    border-radius: 8px;
+}
+
+.skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--skeleton-shimmer);
+    animation: shimmer 1.5s infinite;
+}
+
+/* ── Glass Card ── */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-premium);
+    border-radius: 16px;
+}
+
+/* ── Animations ── */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.slide-up {
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ── Button Primitives ── */
+.btn {
+    padding: 0.8rem 1.8rem;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn:focus-visible {
+    outline: 2px solid var(--accent-cyan);
+    outline-offset: 2px;
+}
+
+button.primary,
+.btn.primary,
+.primary-btn {
+    background: var(--primary-red);
+    color: #fff;
+    padding: 0.8rem 1.8rem;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+button.primary:hover,
+.btn.primary:hover,
+.primary-btn:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(229, 9, 20, 0.3);
+}
+
+button.secondary,
+.btn.secondary {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    padding: 0.8rem 1.8rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+button.secondary:hover,
+.btn.secondary:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* ── Form Primitives ── */
+input,
+textarea,
+select {
+    font-family: inherit;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-main);
+    padding: 0.8rem 1rem;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: var(--primary-red);
+    box-shadow: 0 0 12px rgba(229, 9, 20, 0.1);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+/* ── Carousel ── */
+.carousel-section {
+    margin: 2.5rem 0;
+    padding: 0 4vw;
+}
+
+.carousel-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+    color: #fff;
+    letter-spacing: 0.3px;
+}
+
+.carousel-row {
+    display: flex;
+    overflow-x: auto;
+    gap: 1.2rem;
+    padding: 0.5rem 0 2rem;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+}
+
+.carousel-row::-webkit-scrollbar {
+    display: none;
+}
+
+/* ── Toast System ── */
+.toast-container {
+    position: fixed;
+    top: 5rem;
+    right: 2rem;
+    z-index: 3000;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.toast {
+    background: rgba(20, 24, 33, 0.92);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #fff;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    min-width: 280px;
+    animation: slideInRight 0.4s ease-out;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(60px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.toast-success {
+    border-left: 4px solid #10B981;
+}
+
+.toast-error {
+    border-left: 4px solid #EF4444;
+}
+
+.toast-info {
+    border-left: 4px solid #3B82F6;
+}
+
+/* ── Progress Bar ── */
+.progress-bar-container {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 0.5rem;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: var(--primary-red);
+    box-shadow: 0 0 8px var(--primary-red);
+    transition: width 0.3s ease;
+}
+
+/* ── Empty State ── */
+.empty-state {
+    text-align: center;
+    padding: 5rem 2rem;
+    max-width: 500px;
+    margin: 4rem auto;
+}
+
+.empty-state h2 {
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+}
+
+.empty-state p {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    margin-bottom: 2rem;
+}
+
+.empty-illustration {
+    font-size: 5rem;
+    margin-bottom: 1.5rem;
+    display: block;
+}
+
+/* ── Loading & Error States ── */
+.loading,
+.error,
+.no-movies {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+    font-size: 1.1rem;
+    color: var(--text-muted);
+}
+
+.error {
+    color: #ff6b6b;
+}
+
+.detail-error {
+    margin: 120px auto;
+    max-width: 500px;
+    text-align: center;
+    padding: 3rem;
+    font-size: 1.1rem;
+}
+
+/* ── Utility ── */
+.mt-2 {
+    margin-top: 0.8rem;
+}
+
+.mt-4 {
+    margin-top: 1.5rem;
+}
+
+.mb-4 {
+    margin-bottom: 1rem;
+}
+
+.label-small {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin-bottom: 0.6rem;
+}
+
+/* ── Accessibility: Focus Visible ── */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+    outline: 2px solid var(--accent-cyan);
+    outline-offset: 2px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+    .carousel-title {
+        font-size: 1.15rem;
+    }
+
+    .carousel-row {
+        gap: 0.8rem;
+    }
+
+    .carousel-section {
+        padding: 0 3vw;
+    }
+}
+
+@media (max-width: 600px) {
+    .carousel-title {
+        font-size: 1rem;
+    }
+
+    .carousel-row {
+        gap: 0.5rem;
+    }
+
+    .carousel-section {
+        padding: 0 2vw;
+    }
+
+    .toast-container {
+        right: 1rem;
+        left: 1rem;
+    }
+
+    .toast {
+        min-width: unset;
+    }
+}

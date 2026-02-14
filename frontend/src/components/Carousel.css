@@ -1,0 +1,39 @@
+/* ══ Carousel ══ */
+.carousel-section {
+  margin-bottom: 2.5rem;
+}
+
+.carousel-title {
+  color: #fff;
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin: 0 0 1rem 1vw;
+  letter-spacing: 0.3px;
+}
+
+.carousel-row {
+  display: flex;
+  overflow-x: auto;
+  gap: 1.2rem;
+  padding: 0.5rem 1vw 1.5rem;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(229, 9, 20, 0.4) transparent;
+}
+
+.carousel-row::-webkit-scrollbar {
+  height: 4px;
+}
+
+.carousel-row::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.carousel-row::-webkit-scrollbar-thumb {
+  background: rgba(229, 9, 20, 0.4);
+  border-radius: 4px;
+}
+
+.carousel-row::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-red);
+}

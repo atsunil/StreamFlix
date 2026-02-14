@@ -1,0 +1,202 @@
+/* ══ Home Page ══ */
+.home {
+    padding-bottom: 5rem;
+}
+
+/* ── Welcome Badge ── */
+.welcome-badge {
+    display: inline-block;
+    background: rgba(229, 9, 20, 0.1);
+    color: var(--primary-red);
+    padding: 0.4rem 1.2rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(229, 9, 20, 0.2);
+    animation: slideRight 0.6s ease-out;
+}
+
+@keyframes slideRight {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ── Hero Section ── */
+.hero {
+    min-height: 560px;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: flex-end;
+    padding: 0 4vw 3rem;
+    position: relative;
+}
+
+.hero-content {
+    max-width: 700px;
+    position: relative;
+    z-index: 2;
+}
+
+.hero-title {
+    font-size: 4rem;
+    font-weight: 950;
+    line-height: 1.05;
+    margin-bottom: 1.2rem;
+    text-shadow: 0 4px 30px rgba(0, 0, 0, 0.6);
+}
+
+.hero-description {
+    font-size: 1.2rem;
+    color: #bbb;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    max-width: 580px;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+.hero-btn {
+    padding: 0.9rem 2.2rem;
+    border-radius: 12px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.hero-btn.primary {
+    background: var(--primary-red);
+    color: #fff;
+}
+
+.hero-btn.primary:hover {
+    background: var(--primary-hover);
+    transform: scale(1.04);
+    box-shadow: 0 6px 20px rgba(229, 9, 20, 0.4);
+}
+
+.hero-btn.secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    backdrop-filter: blur(10px);
+}
+
+.hero-btn.secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* ── Hero Slideshow Dots ── */
+.hero-slideshow-nav {
+    display: flex;
+    gap: 0.6rem;
+}
+
+.hero-slide-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+}
+
+.hero-slide-dot.active {
+    background: var(--primary-red);
+    width: 28px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px var(--primary-red);
+}
+
+.hero-slide-dot:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* ── Sections ── */
+.sections-container {
+    padding: 1rem 0;
+}
+
+.no-movies {
+    margin: 4rem 4vw;
+    padding: 4rem;
+    text-align: center;
+    font-size: 1.3rem;
+}
+
+/* ── Home Skeleton ── */
+.home-skeleton {
+    min-height: 100vh;
+}
+
+.hero-skeleton {
+    margin-bottom: 2rem;
+}
+
+.carousel-skeleton-row {
+    margin-bottom: 3rem;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+    .hero {
+        min-height: 350px;
+        padding: 0 3vw 2rem;
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+    }
+
+    .hero-description {
+        font-size: 1rem;
+    }
+
+    .hero-btn {
+        font-size: 0.95rem;
+        padding: 0.7rem 1.5rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .hero {
+        min-height: 250px;
+        padding: 0 2vw 1.5rem;
+    }
+
+    .hero-title {
+        font-size: 1.8rem;
+    }
+
+    .hero-description {
+        font-size: 0.9rem;
+    }
+
+    .hero-btn {
+        font-size: 0.85rem;
+        padding: 0.6rem 1rem;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+}
