@@ -7,11 +7,17 @@ const {
   removeFromWatchlist,
   updateRecentlyWatched,
   getRecommendations,
-  getMe
+  getMe,
+  getNotifications,
+  markNotificationsRead
 } = require('../controllers/users.controller');
 
 // Get current user info
 router.get('/me', authMiddleware, getMe);
+
+// Notifications
+router.get('/notifications', authMiddleware, getNotifications);
+router.post('/notifications/read', authMiddleware, markNotificationsRead);
 
 console.log('users.routes imports:', { authMiddlewareExists: !!authMiddleware, getWatchlist: !!getWatchlist });
 

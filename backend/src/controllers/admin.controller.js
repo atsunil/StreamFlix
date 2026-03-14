@@ -1,4 +1,6 @@
 const Movie = require('../models/Movie');
+const User = require('../models/User');
+const Notification = require('../models/Notification');
 const mockStorage = require('../utils/mockStorage');
 
 async function createMovie(req, res, next) {
@@ -11,6 +13,22 @@ async function createMovie(req, res, next) {
 
     console.log('Creating movie with data:', req.body);
     const movie = await Movie.create(req.body);
+    
+    // Create notifications for all users
+    try {
+      const users = await User.find({}, '_id');
+      const notifications = users.map(u => ({
+        userId: u._id,
+        message: `New arrival: ${movie.title} is now available!`,
+        movieId: movie._id
+      }));
+      if (notifications.length > 0) {
+        await Notification.insertMany(notifications);
+      }
+    } catch (notifErr) {
+      console.error('Error creating notifications:', notifErr);
+    }
+    
     res.status(201).json(movie);
   } catch (err) {
     console.error('Create movie error:', err);

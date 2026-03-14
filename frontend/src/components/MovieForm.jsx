@@ -82,11 +82,12 @@ const MovieForm = ({ initialData, onSubmit, userToken }) => {
   };
 
   const isYouTubeUrl = (url) => {
-    return url && (url.includes('youtube.com') || url.includes('youtu.be'));
+    // Return true for all URLs since we removed the limitation
+    return true;
   };
 
   const getYouTubeEmbedUrl = (url) => {
-    if (!isYouTubeUrl(url)) return null;
+    if (!url) return null;
     let videoId = '';
     if (url.includes('v=')) {
       videoId = url.split('v=')[1]?.split('&')[0];
@@ -94,6 +95,47 @@ const MovieForm = ({ initialData, onSubmit, userToken }) => {
       videoId = url.split('youtu.be/')[1]?.split('?')[0];
     }
     return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+  };
+
+  const handleFileUpload = async (e, fieldName) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setLoading(true);
+    setError('');
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const response = await fetch(`${API_URL}/upload`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${userToken}`
+        },
+        body: formData
+      });
+
+      if (!response.ok) {
+        throw new Error('File upload failed');
+      }
+
+      const data = await response.json();
+      
+      const fullUrl = data.url.startsWith('/') 
+        ? `${API_URL.replace('/api', '')}${data.url}` 
+        : data.url;
+        
+      setFormData(prev => ({
+        ...prev,
+        [fieldName]: fullUrl
+      }));
+    } catch (err) {
+      setError(err.message || 'Upload failed');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const autoSuggestByAI = () => {
@@ -159,17 +201,6 @@ const MovieForm = ({ initialData, onSubmit, userToken }) => {
     e.preventDefault();
     setError('');
     setLoading(true);
-
-    if (formData.trailerUrl && !isYouTubeUrl(formData.trailerUrl)) {
-      setError('Trailer URL must be a valid YouTube link.');
-      setLoading(false);
-      return;
-    }
-    if (formData.movieUrl && !isYouTubeUrl(formData.movieUrl)) {
-      setError('Movie URL must be a valid YouTube link.');
-      setLoading(false);
-      return;
-    }
 
     try {
       const payload = {
@@ -247,20 +278,38 @@ const MovieForm = ({ initialData, onSubmit, userToken }) => {
 
             <div className="form-row">
               <div className="floating-group">
-                <input type="url" id="trailerUrl" placeholder=" " name="trailerUrl" value={formData.trailerUrl} onChange={handleChange} required className="wizard-input floating-input" />
-                <label htmlFor="trailerUrl" className="floating-label">Trailer YouTube URL</label>
+                <input type="text" id="trailerUrl" placeholder=" " name="trailerUrl" value={formData.trailerUrl} onChange={handleChange} required className="wizard-input floating-input" />
+                <label htmlFor="trailerUrl" className="floating-label">Trailer URL</label>
+                <div className="upload-btn-wrapper mt-2">
+                  <button type="button" className="btn file-btn">⬆ Upload Trailer File</button>
+                  <input type="file" accept="video/*" onChange={(e) => handleFileUpload(e, 'trailerUrl')} />
+                </div>
                 {trailerEmbedUrl && (
                   <div className="youtube-preview mt-2">
                     <iframe src={trailerEmbedUrl} title="Trailer Preview" frameBorder="0" allowFullScreen style={{ width: '100%', height: '150px', borderRadius: '8px' }}></iframe>
                   </div>
                 )}
+                {!trailerEmbedUrl && formData.trailerUrl && (
+                  <div className="video-preview mt-2">
+                    <video src={formData.trailerUrl} controls style={{ width: '100%', height: '150px', borderRadius: '8px' }}></video>
+                  </div>
+                )}
               </div>
               <div className="floating-group">
-                <input type="url" id="movieUrl" placeholder=" " name="movieUrl" value={formData.movieUrl} onChange={handleChange} required className="wizard-input floating-input" />
-                <label htmlFor="movieUrl" className="floating-label">Full Movie YouTube URL</label>
+                <input type="text" id="movieUrl" placeholder=" " name="movieUrl" value={formData.movieUrl} onChange={handleChange} required className="wizard-input floating-input" />
+                <label htmlFor="movieUrl" className="floating-label">Full Movie URL</label>
+                <div className="upload-btn-wrapper mt-2">
+                  <button type="button" className="btn file-btn">⬆ Upload Movie File</button>
+                  <input type="file" accept="video/*" onChange={(e) => handleFileUpload(e, 'movieUrl')} />
+                </div>
                 {movieEmbedUrl && (
                   <div className="youtube-preview mt-2">
                     <iframe src={movieEmbedUrl} title="Movie Preview" frameBorder="0" allowFullScreen style={{ width: '100%', height: '150px', borderRadius: '8px' }}></iframe>
+                  </div>
+                )}
+                {!movieEmbedUrl && formData.movieUrl && (
+                  <div className="video-preview mt-2">
+                    <video src={formData.movieUrl} controls style={{ width: '100%', height: '150px', borderRadius: '8px' }}></video>
                   </div>
                 )}
               </div>
@@ -327,8 +376,12 @@ const MovieForm = ({ initialData, onSubmit, userToken }) => {
             </div>
 
             <div className="floating-group mt-4">
-              <input type="url" id="posterUrl" placeholder=" " name="posterUrl" value={formData.posterUrl} onChange={handleChange} required className="wizard-input floating-input" />
+              <input type="text" id="posterUrl" placeholder=" " name="posterUrl" value={formData.posterUrl} onChange={handleChange} required className="wizard-input floating-input" />
               <label htmlFor="posterUrl" className="floating-label">Poster URL</label>
+              <div className="upload-btn-wrapper mt-2">
+                <button type="button" className="btn file-btn">⬆ Upload Poster Image</button>
+                <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'posterUrl')} />
+              </div>
             </div>
 
             <div className="form-check-group mt-4">

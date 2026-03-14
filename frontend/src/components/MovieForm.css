@@ -288,3 +288,40 @@
     display: none;
   }
 }
+
+/* File Upload Button Styles */
+.upload-btn-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  margin-top: 10px;
+}
+
+.file-btn {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.file-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: var(--primary-red);
+}
+
+.upload-btn-wrapper input[type=file] {
+  font-size: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.video-preview {
+  margin-top: 10px;
+}

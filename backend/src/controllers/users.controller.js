@@ -14,12 +14,22 @@ async function getMe(req, res, next) {
 }
 const User = require('../models/User');
 const Movie = require('../models/Movie');
+const Notification = require('../models/Notification');
 const mongoose = require('mongoose');
+const mockStorage = require('../utils/mockStorage');
 
 async function getWatchlist(req, res, next) {
   try {
     const userId = req.user?.id || req.params.userId;
     if (!userId) return res.status(400).json({ message: 'Missing user id' });
+    
+    if (!process.env.DATABASE_URL && !process.env.MONGODB_URI) {
+      const user = mockStorage.userStorage.getById(userId);
+      if (!user) return res.status(404).json({ message: 'User not found' });
+      const populated = (user.watchlist || []).map(id => mockStorage.movieStorage.getById(id)).filter(Boolean);
+      return res.json(populated);
+    }
+    
     const user = await User.findById(userId).populate('watchlist');
     if (!user) return res.status(404).json({ message: 'User not found' });
     return res.json(user.watchlist || []);
@@ -32,29 +42,35 @@ async function addToWatchlist(req, res, next) {
   try {
     const userId = req.user?.id;
     const { movieId } = req.body;
-    console.log('[addToWatchlist] userId:', userId, 'movieId:', movieId);
     if (!userId || !movieId) {
-      console.log('[addToWatchlist] Missing params', { userId, movieId });
       return res.status(400).json({ message: 'Missing params' });
     }
-    const user = await User.findById(userId).populate('watchlist');
+    
+    if (!process.env.DATABASE_URL && !process.env.MONGODB_URI) {
+      const user = mockStorage.userStorage.getById(userId);
+      if (!user) return res.status(404).json({ message: 'User not found' });
+      if (!user.watchlist) user.watchlist = [];
+      if (!user.watchlist.includes(movieId)) {
+        user.watchlist.push(movieId);
+      }
+      const populated = user.watchlist.map(id => mockStorage.movieStorage.getById(id)).filter(Boolean);
+      return res.json(populated);
+    }
+    
+    const user = await User.findById(userId);
     if (!user) {
-      console.log('[addToWatchlist] User not found:', userId);
       return res.status(404).json({ message: 'User not found' });
     }
     if (!user.watchlist) user.watchlist = [];
-    // Remove any existing instances of movieId to prevent duplicates
-    user.watchlist = user.watchlist.filter(id => {
-      if (typeof id === 'object' && id._id) {
-        return id._id.toString() !== movieId;
-      }
-      return id.toString() !== movieId;
-    });
-    user.watchlist.push(movieId);
-    console.log('[addToWatchlist] Movie added to watchlist (no duplicates):', movieId);
-    await user.save();
+    
+    // Ensure uniqueness manually without populate
+    const stringWatchlist = user.watchlist.map(id => id.toString());
+    if (!stringWatchlist.includes(movieId.toString())) {
+      user.watchlist.push(movieId);
+      await user.save();
+    }
+    
     await user.populate('watchlist');
-    console.log('[addToWatchlist] Updated watchlist:', user.watchlist.map(m => m._id?.toString() || m.toString()));
     return res.json(user.watchlist);
   } catch (err) {
     console.error('[addToWatchlist] Error:', err);
@@ -66,30 +82,30 @@ async function removeFromWatchlist(req, res, next) {
   try {
     const userId = req.user?.id;
     const { movieId } = req.params;
-    console.log('[removeFromWatchlist] userId:', userId, 'movieId:', movieId);
     if (!userId || !movieId) {
-      console.log('[removeFromWatchlist] Missing params', { userId, movieId });
       return res.status(400).json({ message: 'Missing params' });
     }
-    const user = await User.findById(userId).populate('watchlist');
+    
+    if (!process.env.DATABASE_URL && !process.env.MONGODB_URI) {
+      const user = mockStorage.userStorage.getById(userId);
+      if (!user) return res.status(404).json({ message: 'User not found' });
+      if (!user.watchlist) user.watchlist = [];
+      user.watchlist = user.watchlist.filter(id => id !== movieId);
+      const populated = user.watchlist.map(id => mockStorage.movieStorage.getById(id)).filter(Boolean);
+      return res.json(populated);
+    }
+    
+    const user = await User.findById(userId);
     if (!user) {
-      console.log('[removeFromWatchlist] User not found:', userId);
       return res.status(404).json({ message: 'User not found' });
     }
     if (!user.watchlist) user.watchlist = [];
-    const before = user.watchlist.length;
+    
     // Remove all instances of movieId from watchlist
-    user.watchlist = user.watchlist.filter(id => {
-      if (typeof id === 'object' && id._id) {
-        return id._id.toString() !== movieId;
-      }
-      return id.toString() !== movieId;
-    });
-    const after = user.watchlist.length;
-    console.log(`[removeFromWatchlist] Watchlist size before: ${before}, after: ${after}`);
+    user.watchlist = user.watchlist.filter(id => id.toString() !== movieId.toString());
+    
     await user.save();
     await user.populate('watchlist');
-    console.log('[removeFromWatchlist] Updated watchlist:', user.watchlist.map(m => m._id?.toString() || m.toString()));
     return res.json(user.watchlist);
   } catch (err) {
     console.error('[removeFromWatchlist] Error:', err);
@@ -157,11 +173,37 @@ async function getRecommendations(req, res, next) {
 
 // Profile management logic removed
 
+async function getNotifications(req, res, next) {
+  try {
+    const userId = req.user?.id;
+    if (!userId) return res.status(401).json({ message: 'Unauthorized' });
+    const notifications = await Notification.find({ userId })
+      .sort({ createdAt: -1 })
+      .populate('movieId', 'slug title posterUrl');
+    res.json(notifications);
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function markNotificationsRead(req, res, next) {
+  try {
+    const userId = req.user?.id;
+    if (!userId) return res.status(401).json({ message: 'Unauthorized' });
+    await Notification.updateMany({ userId, isRead: false }, { isRead: true });
+    res.json({ message: 'Notifications marked as read' });
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   getWatchlist,
   addToWatchlist,
   removeFromWatchlist,
   updateRecentlyWatched,
-  getRecommendations
-  ,getMe
+  getRecommendations,
+  getMe,
+  getNotifications,
+  markNotificationsRead
 };

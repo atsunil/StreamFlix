@@ -75,4 +75,19 @@ export const fetchRecommendations = async (token) => {
     return response.data;
 };
 
+// Notifications
+export const fetchNotifications = async (token) => {
+    const response = await axios.get(`${API_URL}/users/notifications`, {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+};
+
+export const markNotificationsAsRead = async (token) => {
+    const response = await axios.post(`${API_URL}/users/notifications/read`, {}, {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+};
+
 export default axios;

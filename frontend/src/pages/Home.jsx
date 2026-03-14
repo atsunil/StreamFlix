@@ -137,10 +137,16 @@ const Home = ({ search = "" }) => {
 
   if (sortBy === 'newest') {
     filteredMovies.sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate));
+  } else if (sortBy === 'oldest') {
+    filteredMovies.sort((a, b) => new Date(a.releaseDate) - new Date(b.releaseDate));
   } else if (sortBy === 'rating') {
     filteredMovies.sort((a, b) => (b.rating || 0) - (a.rating || 0));
   } else if (sortBy === 'popular') {
     filteredMovies.sort((a, b) => (b.views || 0) - (a.views || 0));
+  } else if (sortBy === 'az') {
+    filteredMovies.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+  } else if (sortBy === 'za') {
+    filteredMovies.sort((a, b) => (b.title || '').localeCompare(a.title || ''));
   }
 
   const featuredMovies = filteredMovies.slice(0, 5);

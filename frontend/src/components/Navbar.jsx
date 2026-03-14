@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { fetchMovies } from '../api/api';
+import { fetchMovies, fetchNotifications, markNotificationsAsRead } from '../api/api';
 import './Navbar.css';
 
 const Navbar = ({ onSearch }) => {
@@ -12,17 +12,52 @@ const Navbar = ({ onSearch }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [activeIndex, setActiveIndex] = useState(-1);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [showNotifications, setShowNotifications] = useState(false);
   const searchRef = useRef(null);
+  const notifRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (searchRef.current && !searchRef.current.contains(e.target)) {
         setShowSuggestions(false);
       }
+      if (notifRef.current && !notifRef.current.contains(e.target)) {
+        setShowNotifications(false);
+      }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    const loadNotifications = async () => {
+      if (user) {
+        try {
+          const data = await fetchNotifications(user.token);
+          setNotifications(data || []);
+        } catch (err) {
+          console.error('Failed to load notifications', err);
+        }
+      }
+    };
+    loadNotifications();
+  }, [user]);
+
+  const handleNotificationsClick = async () => {
+    if (!showNotifications) {
+      setShowNotifications(true);
+      const unread = notifications.some(n => !n.isRead);
+      if (unread && user) {
+        try {
+          await markNotificationsAsRead(user.token);
+          setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+        } catch (e) {}
+      }
+    } else {
+      setShowNotifications(false);
+    }
+  };
 
   const handleLogout = () => {
     logout();
@@ -124,11 +159,41 @@ const Navbar = ({ onSearch }) => {
           )}
         </div>
 
-        <div className="navbar-notifications">
-          <button className="icon-btn" aria-label="Notifications">
-            <span className="bell-icon">🔔</span>
-            <span className="notification-dot"></span>
-          </button>
+        <div className="navbar-notifications" ref={notifRef}>
+          {user && (
+            <button className="icon-btn" aria-label="Notifications" onClick={handleNotificationsClick}>
+              <span className="bell-icon">🔔</span>
+              {notifications.some(n => !n.isRead) && <span className="notification-dot"></span>}
+            </button>
+          )}
+          
+          {showNotifications && (
+            <div className="notifications-dropdown glass-card fade-in">
+              <h3 className="notifications-header">Notifications</h3>
+              <div className="notifications-list">
+                {notifications.length === 0 ? (
+                  <p className="no-notifications">No new notifications.</p>
+                ) : (
+                  notifications.map(notif => (
+                    <div key={notif._id} className={`notification-item ${!notif.isRead ? 'unread' : ''}`} onClick={() => {
+                      if(notif.movieId?.slug) {
+                        navigate(`/movie/${notif.movieId.slug}`);
+                        setShowNotifications(false);
+                      }
+                    }}>
+                      {notif.movieId?.posterUrl && (
+                        <img src={notif.movieId.posterUrl} alt="Movie poster" className="notif-poster" />
+                      )}
+                      <div className="notif-content">
+                        <p>{notif.message}</p>
+                        <span className="notif-time">{new Date(notif.createdAt).toLocaleDateString()}</span>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="navbar-profile">

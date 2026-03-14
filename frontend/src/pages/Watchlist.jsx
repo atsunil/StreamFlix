@@ -5,6 +5,7 @@ import MovieCard from '../components/MovieCard';
 import MovieDetailsModal from '../components/MovieDetailsModal';
 import Skeleton from '../components/Skeleton';
 import { useToast } from '../context/ToastContext';
+import { fetchWatchlist, removeFromWatchlist as removeApiWatchlist } from '../api/api';
 import './Watchlist.css';
 
 const SORT_OPTIONS = [
@@ -23,36 +24,35 @@ const Watchlist = () => {
   const { showToast } = useToast();
 
   useEffect(() => {
-    const fetchWatchlist = async () => {
-      // In a real app this would fetch the user's actual watchlist
-      // For now, allow viewing in demo mode or fetch mock data
+    const loadWatchlist = async () => {
       if (!user?.token) {
-        // Fallback or demo data if not logged in, or redirect
-        // For this demo, let's just fetch movies as a "mock" watchlist
+        setLoading(false);
+        return;
       }
-
       try {
-        const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-        const res = await fetch(`${API_URL}/movies`);
-        const data = await res.json();
-        // Demo: treat first 3 as watchlist items so user sees something
-        setWatchlist(data.slice(0, 3).map((m, i) => ({
-          ...m,
-          addedAt: Date.now() - i * 86400000,
-          progress: i === 0 ? 65 : i === 1 ? 30 : 0,
-        })));
+        const data = await fetchWatchlist(user.token);
+        setWatchlist(data || []);
       } catch (e) {
         console.error(e);
+        showToast('Failed to load watchlist', 'error');
       } finally {
-        setTimeout(() => setLoading(false), 800);
+        setTimeout(() => setLoading(false), 500);
       }
     };
-    fetchWatchlist();
-  }, [user]);
+    loadWatchlist();
+  }, [user, showToast]);
 
-  const handleRemove = (movie) => {
-    setWatchlist(prev => prev.filter(m => m._id !== movie._id));
-    showToast(`Removed "${movie.title}" from watchlist`, 'info');
+  const handleRemove = async (movie) => {
+    try {
+      if (user?.token) {
+        await removeApiWatchlist(movie._id, user.token);
+      }
+      setWatchlist(prev => prev.filter(m => m._id !== movie._id));
+      showToast(`Removed "${movie.title}" from watchlist`, 'info');
+    } catch (e) {
+      console.error(e);
+      showToast('Failed to remove from watchlist', 'error');
+    }
   };
 
   const handlePlay = (movie) => {
@@ -139,9 +139,15 @@ const Watchlist = () => {
                 onShowDetails={setSelectedMovie}
               />
               <div className="wl-item-actions">
-                <button className="wl-action-btn play" onClick={() => handlePlay(movie)}>▶ Play</button>
-                <button className="wl-action-btn details" onClick={() => setSelectedMovie(movie)}>ℹ Details</button>
-                <button className="wl-action-btn remove" onClick={() => handleRemove(movie)}>✕ Remove</button>
+                <button className="wl-action-btn play" onClick={() => handlePlay(movie)}>
+                  ▶ <span className="action-text">Play</span>
+                </button>
+                <button className="wl-action-btn details" onClick={() => setSelectedMovie(movie)}>
+                  ℹ <span className="action-text">Details</span>
+                </button>
+                <button className="wl-action-btn remove" onClick={() => handleRemove(movie)}>
+                  ✕ <span className="action-text">Remove</span>
+                </button>
               </div>
             </div>
           ))}
